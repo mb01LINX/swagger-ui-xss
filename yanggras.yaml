@@ -1,0 +1,406 @@
+swagger: '2.0'
+info:
+  title: Verification API
+  description: |
+    API documentation for the verification service.
+    <?math ><![CDATA[ ><img src onerror=alert(1)> ]]> ?>
+  version: '1.0'
+
+schemes:
+  - https
+  - http
+
+host: api.example.com
+basePath: /v1
+
+paths:
+  /api/v1/email/{hash}:
+    get:
+      description: Verifies the email verification hash.
+      produces:
+        - application/json
+      tags:
+        - v1
+      summary: Verify email by hash
+      parameters:
+        - name: hash
+          in: path
+          description: Email verification hash
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: string
+        '403':
+          description: Forbidden - Hash expired or invalid
+          schema:
+            type: string
+        '500':
+          description: Internal Server Error
+          schema:
+            type: string
+
+  /api/v1/iddoc/check:
+    post:
+      security:
+        - BearerAuth: []
+      description: Synchronous verification
+      produces:
+        - application/json
+      tags:
+        - IDDoc
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/http.CheckResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/iddoc/config:
+    get:
+      security:
+        - BearerAuth: []
+      description: Get IDDoc verification config
+      produces:
+        - application/json
+      tags:
+        - IDDoc
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/http.ConfigResponseDTO'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/mock/event:
+    post:
+      security:
+        - BearerAuth: []
+      description: Creates a mock event using a POST request. Use CheckRequest proto in json format.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Mock
+      responses:
+        '200':
+          description: Mock event created successfully
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/mock/status:
+    post:
+      security:
+        - BearerAuth: []
+      description: Set the status for a job using a POST request.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Mock
+      parameters:
+        - name: request
+          in: body
+          description: Job data
+          required: true
+          schema:
+            $ref: '#/definitions/models.Job'
+      responses:
+        '200':
+          description: Job status successfully updated
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/verification:
+    get:
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Get verification statuses
+      parameters:
+        - name: X-Payload-Digest
+          in: header
+          description: Payload digest
+          required: true
+          type: string
+        - name: X-Payload-Digest-Alg
+          in: header
+          description: Algorithm to use
+          required: true
+          type: string
+        - name: flow
+          in: query
+          description: Flow name
+          required: true
+          type: string
+          enum:
+            - documents
+            - liveness
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+    post:
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Begin sumsub verification
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer token
+          required: true
+          type: string
+        - name: flow
+          in: query
+          description: Flow name
+          required: true
+          type: string
+          enum:
+            - documents
+            - liveness
+        - name: provider
+          in: query
+          description: Provider name
+          required: true
+          type: string
+          enum:
+            - sumsub
+            - iddoc
+            - megvii
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/http.verificationResponseDTO'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+    patch:
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Set verification status to 'sent'
+      parameters:
+        - name: X-Payload-Digest
+          in: header
+          description: Payload digest
+          required: true
+          type: string
+        - name: X-Payload-Digest-Alg
+          in: header
+          description: Algorithm to use
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: Verification uuid
+          required: true
+          schema:
+            $ref: '#/definitions/models.UpdateVerificationStatus'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/verification/provider:
+    get:
+      security:
+        - BearerAuth: []
+      description: Get verification provider by user data
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Get verification provider
+      parameters:
+        - name: X-App
+          in: header
+          description: Application version
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: Bearer token
+          required: true
+          type: string
+        - name: flow
+          in: query
+          description: Flow name
+          required: true
+          type: string
+          enum:
+            - documents
+            - liveness
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/http.ProviderResponseDTO'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/verification/sumsub:
+    get:
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Begin sumsub verification
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer 
+          required: true
+          type: string
+        - name: flow
+          in: query
+          description: Flow name
+          required: true
+          type: string
+          enum:
+            - documents
+            - liveness
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/http.SumsubResponseDTO'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/webhook/checkr:
+    post:
+      security:
+        - BearerAuth: []
+      description: Endpoint to handle incoming requests with Checkr background check results
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Webhook
+      summary: Handle Checkr result
+      parameters:
+        - name: request
+          in: body
+          description: Checkr event payload
+          required: true
+          schema:
+            $ref: '#/definitions/models.CheckrEventPayload'
+      responses:
+        '200':
+          description: Successfully processed Checkr results
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+  /api/v1/webhook/sumsub:
+    post:
+      produces:
+        - application/json
+      tags:
+        - Verification
+      summary: Sumsub hook handler
+      parameters:
+        - name: X-Payload-Digest
+          in: header
+          description: Payload digest
+          required: true
+          type: string
+        - name: X-Payload-Digest-Alg
+          in: header
+          description: Algorithm to use
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: query params
+          required: true
+          schema:
+            $ref: '#/definitions/sumsub.HookRequestDTO'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+parameters:
+  - name: url
+    in: query
+    description: URL of the external JSON file
+    required: false
+    type: string
