@@ -5,7 +5,7 @@ info:
   description: Self-replication contest
   version: "0.1"
 servers:
-- url: https://bukanmain.cloud
+- url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
 paths:
   /update:
     post:
@@ -27,9 +27,9 @@ paths:
                 type: string
               examples: {}
       servers:
-      - url: https://bukanmain.cloud
+      - url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
     servers:
-    - url: https://bukanmain.cloud
+    - url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
   /send-message:
     post:
       description: Endpoint for users/victims to send messages
@@ -45,6 +45,6 @@ paths:
         "200":
           description: Auto generated using Swagger Inspector
       servers:
-      - url: https://bukanmain.cloud
+      - url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
     servers:
-    - url: https://bukanmain.cloud
+    - url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
