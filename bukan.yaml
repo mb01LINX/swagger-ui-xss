@@ -5,7 +5,7 @@ info:
   description: Self-replication contest
   version: "0.1"
 servers:
-- url: https://puxwxrqulmhoarzxummv3bj4upj96tagi.oast.fun
+- url: https://xxyi633e37hn5dxgo0lxee7lxc32rr.oastify.com
 paths:
   /update:
     post:
